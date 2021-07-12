@@ -18,6 +18,6 @@ public class IndexController extends BaseController{
     @GetMapping
     public Object index(){
         // return SecurityContextHolder.getContext().getAuthentication();
-        return "访问资源成功 :) !";
+        return "访问资源成功 :)";
     }
 }
