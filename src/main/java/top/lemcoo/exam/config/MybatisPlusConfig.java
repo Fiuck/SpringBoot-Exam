@@ -13,7 +13,7 @@ import org.springframework.context.annotation.Configuration;
  * @desc
  */
 @Configuration
-@MapperScan("top.lemcoo.demo.mapper")
+@MapperScan("top.lemcoo.exam.mapper")
 public class MybatisPlusConfig {
 
     @Bean
