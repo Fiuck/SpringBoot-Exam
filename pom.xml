@@ -9,7 +9,7 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>top.lemcoo</groupId>
-    <artifactId>exam</artifactId>
+    <artifactId>SpringBoot-Exam</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>exam</name>
     <description>SpringBoot在线考试系统</description>

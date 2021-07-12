@@ -44,4 +44,4 @@ jwt:
     authPath: /auth/**
   header: Authorization
   secret: eyJleHAiOjE1NDMyMDUyODUsInN1YiI6ImFkbWluIiwiY3JlYXRlZCI6MTU0MDYxMzI4N
-  expiration: 604800
+  expiration: 86400000

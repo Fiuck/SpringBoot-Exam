@@ -1,5 +1,6 @@
 package top.lemcoo.exam.controller;
 
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -7,15 +8,15 @@ import org.springframework.web.bind.annotation.RestController;
 /**
  * 【】
  *
- * @author zhaowx
- * @date 2021/7/9 0009 15:56
+ * @Author: zhaowx
+ * @Date: 2021/6/27 17:12
  */
 @RestController
 @RequestMapping("/index")
-public class IndexController {
+public class IndexController extends BaseController{
 
     @GetMapping
-    public String index(){
-        return "jenkins部署";
+    public Object index(){
+        return SecurityContextHolder.getContext().getAuthentication();
     }
 }
