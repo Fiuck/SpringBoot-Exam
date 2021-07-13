@@ -81,5 +81,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
         // 处理异常情况：认证失败和权限不足
         http.exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint);
+        http.cors();
     }
 }
