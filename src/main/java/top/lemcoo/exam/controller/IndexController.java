@@ -18,7 +18,7 @@ public class IndexController extends BaseController{
     @GetMapping
     public Object index(){
 //         return SecurityContextHolder.getContext().getAuthentication();
-//        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
         return "访问资源成功 :)，当前登录用户为：" + username;
     }
 }
