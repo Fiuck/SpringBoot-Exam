@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 public enum ResultCode {
 
     SUCCESS(2000, "操作成功"),
+    LOGOUT_SUCCESS(2001, "注销成功"),
     FAILED(3000, "操作失败"),
     VALIDATE_FAILED(3001, "参数校验失败"),
     UNAUTHORIZED(1000, "请先登录"),

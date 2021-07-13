@@ -15,6 +15,7 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 
 /**
  * 【登录成功的操作】
@@ -46,7 +47,7 @@ public class MyAuthenticationSuccessHandler implements AuthenticationSuccessHand
         response.setContentType("application/json;charset=UTF-8");
         ServletOutputStream outputStream = response.getOutputStream();
         String result = JSONUtil.toJsonStr(R.ok(token));
-        outputStream.write(result.getBytes("UTF-8"));
+        outputStream.write(result.getBytes(StandardCharsets.UTF_8));
         outputStream.flush();
         outputStream.close();
     }

@@ -33,6 +33,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private top.lemcoo.exam.security.MyAuthenticationFailureHandler myAuthenticationFailureHandler;
     @Autowired
     top.lemcoo.exam.security.JwtAuthenticationTokenFilter jwtAuthenticationTokenFilter;
+    @Autowired
+    MyAuthenticationLogoutSuccessHandler myAuthenticationLogoutSuccessHandler;
+
     @Value("${jwt.route.authPath}")
     private String authPath;
 
@@ -64,15 +67,19 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(authPath).permitAll()
                 .anyRequest().authenticated()
 
+                // 登录
                 .and().formLogin().loginProcessingUrl("/auth/login")
                 .successHandler(myAuthenticationSuccessHandler)
                 .failureHandler(myAuthenticationFailureHandler)
+
+                // 注销
+                .and()
+                .logout()
+                .logoutUrl("/logout")
+                .logoutSuccessHandler(myAuthenticationLogoutSuccessHandler)
                 .and().headers().cacheControl();
-//
-//        ExpressionUrlAuthorizationConfigurer<HttpSecurity>.ExpressionInterceptUrlRegistry registry = http.authorizeRequests();
-//        //让Spring security 放行所有preflight request（cors 预检请求）
-//        registry.requestMatchers(CorsUtils::isPreFlightRequest).permitAll();
-//        // 处理异常情况：认证失败和权限不足
+
+        // 处理异常情况：认证失败和权限不足
         http.exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint);
     }
 }
