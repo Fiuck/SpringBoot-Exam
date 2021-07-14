@@ -1,5 +1,6 @@
 package top.lemcoo.exam.service;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -19,6 +20,7 @@ import java.util.stream.Collectors;
  * @date 2021/6/24 0024 10:23
  */
 @Service
+@Slf4j
 public class MyUserDetailsService implements UserDetailsService {
 
     @Autowired
@@ -28,6 +30,7 @@ public class MyUserDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException{
         SysUser sysUser = userMapper.selectUser(username);
         if(sysUser == null){
+            log.error("==MyUserDetailsService==loadUserByUsername===用户名不存在！");
             throw new UsernameNotFoundException("用户名不存在！");
         }
         List<SimpleGrantedAuthority> collect = sysUser.getRoles().stream()
