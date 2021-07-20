@@ -7,8 +7,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import top.lemcoo.exam.domain.SysRole;
-import top.lemcoo.exam.domain.SysUser;
+import top.lemcoo.exam.domain.entity.SysRole;
+import top.lemcoo.exam.domain.entity.SysUser;
 import top.lemcoo.exam.mapper.SysUserMapper;
 import top.lemcoo.exam.security.jwt.JwtUser;
 
@@ -30,7 +30,7 @@ public class MyUserDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException{
         SysUser sysUser = userMapper.selectUser(username);
         if(sysUser == null){
-            log.error("==MyUserDetailsService==loadUserByUsername===用户名不存在！");
+            log.error("==MyUserDetailsService==loadUserByUsername===用户：{},不存在！", username);
             throw new UsernameNotFoundException("用户名不存在！");
         }
         List<SimpleGrantedAuthority> collect = sysUser.getRoles().stream()

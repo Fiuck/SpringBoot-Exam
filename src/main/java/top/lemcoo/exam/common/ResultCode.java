@@ -13,7 +13,7 @@ public enum ResultCode {
     VALIDATE_FAILED(3001, "参数校验失败"),
     UNAUTHORIZED(1000, "请先登录"),
     FORBIDDEN(1001, "没有相关权限"),
-    LOGINFAILED(1002, "登录失败");
+    LOGINFAILED(1002, "用户名或密码不正确");
 
     /** 定义状态码 */
     private long code;

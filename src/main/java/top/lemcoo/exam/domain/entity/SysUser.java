@@ -1,4 +1,4 @@
-package top.lemcoo.exam.domain;
+package top.lemcoo.exam.domain.entity;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;

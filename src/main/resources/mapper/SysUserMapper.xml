@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="top.lemcoo.exam.mapper.SysUserMapper">
 
-    <resultMap id="resultMap" type="top.lemcoo.exam.domain.SysUser">
+    <resultMap id="resultMap" type="top.lemcoo.exam.domain.entity.SysUser">
         <!--team中的基本属性-->
         <id column="id" property="id"/>
         <result column="username" property="username"/>
@@ -16,7 +16,7 @@
         <result column="status" property="status"/>
 
         <!--关联属性的映射关系-->
-        <collection property="roles" ofType="top.lemcoo.exam.domain.SysRole">
+        <collection property="roles" ofType="top.lemcoo.exam.domain.entity.SysRole">
             <id column="role_id" property="id"/>
             <result column="role_name" property="roleName"/>
             <result column="code" property="code"/>

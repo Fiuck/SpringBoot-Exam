@@ -2,7 +2,7 @@ package top.lemcoo.exam.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.springframework.stereotype.Repository;
-import top.lemcoo.exam.domain.SysUser;
+import top.lemcoo.exam.domain.entity.SysUser;
 
 /**
  * @author zhaowx

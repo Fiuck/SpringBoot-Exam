@@ -5,18 +5,20 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
-import org.springframework.security.config.Customizer;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.logout.LogoutFilter;
 import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsUtils;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
-import top.lemcoo.exam.service.MyUserDetailsService;
 
 /**
  * 【security配置】
@@ -28,22 +30,46 @@ import top.lemcoo.exam.service.MyUserDetailsService;
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
-    private MyUserDetailsService userDetailsService;
+    private UserDetailsService userDetailsService;
+//    private MyUserDetailsService userDetailsService;
+
     @Autowired
     private JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
+
     @Autowired
-    private top.lemcoo.exam.security.MyAuthenticationSuccessHandler myAuthenticationSuccessHandler;
+    private MyAuthenticationSuccessHandler myAuthenticationSuccessHandler;
+
     @Autowired
-    private top.lemcoo.exam.security.MyAuthenticationFailureHandler myAuthenticationFailureHandler;
+    private MyAuthenticationFailureHandler myAuthenticationFailureHandler;
+
     @Autowired
-    top.lemcoo.exam.security.JwtAuthenticationTokenFilter jwtAuthenticationTokenFilter;
+    JwtAuthenticationTokenFilter jwtAuthenticationTokenFilter;
+
     @Autowired
     MyAuthenticationLogoutSuccessHandler myAuthenticationLogoutSuccessHandler;
+
+    /**
+     * 跨域过滤器
+     */
+//    @Autowired
+//    private CorsFilter corsFilter;
 
     @Value("${jwt.route.authPath}")
     private String authPath;
     @Value("${jwt.header}")
     private String jwtHeader;
+
+    /**
+     * 解决无法注入AuthenticationManager的问题
+     * @return
+     * @throws Exception
+     */
+    @Bean
+    @Override
+    public AuthenticationManager authenticationManagerBean() throws Exception
+    {
+        return super.authenticationManagerBean();
+    }
 
     /**
      * 密码加密策略
@@ -63,6 +89,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         //  在 UsernamePasswordAuthenticationFilter 之前添加 JwtAuthenticationTokenFilter
         http.addFilterBefore(jwtAuthenticationTokenFilter, UsernamePasswordAuthenticationFilter.class);
+        // 添加CORS filter
+        http.addFilterBefore(corsFilter(), JwtAuthenticationTokenFilter.class);
+        http.addFilterBefore(corsFilter(), LogoutFilter.class);
 
         http.csrf().disable()
                 // 关闭session会话管理
@@ -70,48 +99,43 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
                 .and().authorizeRequests()
                 .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                // 解决POST请求跨域问题
+                .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
                 .antMatchers(authPath).permitAll()
                 .anyRequest().authenticated()
 
                 // 登录
-                .and().formLogin().loginProcessingUrl("/auth/login")
-                // 登录成功处理
-                .successHandler(myAuthenticationSuccessHandler)
-                // 登录失败处理
-                .failureHandler(myAuthenticationFailureHandler)
+//                .and().formLogin().loginProcessingUrl("/auth/login")
+//                // 登录成功处理
+//                .successHandler(myAuthenticationSuccessHandler)
+//                // 登录失败处理
+//                .failureHandler(myAuthenticationFailureHandler)
 
                 // 注销
                 .and()
                 .logout()
                 .logoutUrl("/logout")
                 .logoutSuccessHandler(myAuthenticationLogoutSuccessHandler)
-                .and().headers().cacheControl();
+                .and().headers().frameOptions().disable();
 
         // 处理异常情况：认证失败和权限不足
         http.exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint);
-        http.cors();
     }
 
     @Bean
-    public CorsFilter corsFilter() {
-        //1.添加CORS配置信息
+    public CorsFilter corsFilter()
+    {
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration config = new CorsConfiguration();
-        //放行哪些原始域
-        config.addAllowedOriginPattern("*");
-        //是否发送Cookie信息
         config.setAllowCredentials(true);
-        //放行哪些原始域(请求方式)
-        config.addAllowedMethod("*");
-        //放行哪些原始域(头部信息)
+        // 设置访问源地址
+        config.addAllowedOriginPattern("*");
+        // 设置访问源请求头
         config.addAllowedHeader("*");
-        //暴露哪些头部信息（因为跨域访问默认不能获取全部头部信息）
-        config.addExposedHeader("*");
-
-        //2.添加映射路径
-        UrlBasedCorsConfigurationSource configSource = new UrlBasedCorsConfigurationSource();
-        configSource.registerCorsConfiguration("/**", config);
-
-        //3.返回新的CorsFilter.
-        return new CorsFilter(configSource);
+        // 设置访问源请求方法
+        config.addAllowedMethod("*");
+        // 对接口配置跨域设置
+        source.registerCorsConfiguration("/**", config);
+        return new CorsFilter(source);
     }
 }
