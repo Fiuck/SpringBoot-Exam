@@ -14,14 +14,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import sun.security.util.SecurityConstants;
+import org.springframework.web.filter.CorsFilter;
 import top.lemcoo.exam.service.MyUserDetailsService;
-
-import java.util.Arrays;
-
-import static java.util.Collections.singletonList;
 
 /**
  * 【security配置】
@@ -80,7 +75,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
                 // 登录
                 .and().formLogin().loginProcessingUrl("/auth/login")
+                // 登录成功处理
                 .successHandler(myAuthenticationSuccessHandler)
+                // 登录失败处理
                 .failureHandler(myAuthenticationFailureHandler)
 
                 // 注销
@@ -92,24 +89,29 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
         // 处理异常情况：认证失败和权限不足
         http.exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint);
-        http.cors(Customizer.withDefaults());
+        http.cors();
     }
 
-    /**
-     * Cors配置优化
-     **/
     @Bean
-    CorsConfigurationSource corsConfigurationSource() {
-        org.springframework.web.cors.CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(singletonList("*"));
-        // configuration.setAllowedOriginPatterns(singletonList("*"));
-        configuration.setAllowedHeaders(singletonList("*"));
-        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "DELETE", "PUT", "OPTIONS"));
-        configuration.setExposedHeaders(singletonList(jwtHeader));
-        configuration.setAllowCredentials(false);
-        configuration.setMaxAge(3600L);
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration);
-        return source;
+    public CorsFilter corsFilter() {
+        //1.添加CORS配置信息
+        CorsConfiguration config = new CorsConfiguration();
+        //放行哪些原始域
+        config.addAllowedOriginPattern("*");
+        //是否发送Cookie信息
+        config.setAllowCredentials(true);
+        //放行哪些原始域(请求方式)
+        config.addAllowedMethod("*");
+        //放行哪些原始域(头部信息)
+        config.addAllowedHeader("*");
+        //暴露哪些头部信息（因为跨域访问默认不能获取全部头部信息）
+        config.addExposedHeader("*");
+
+        //2.添加映射路径
+        UrlBasedCorsConfigurationSource configSource = new UrlBasedCorsConfigurationSource();
+        configSource.registerCorsConfiguration("/**", config);
+
+        //3.返回新的CorsFilter.
+        return new CorsFilter(configSource);
     }
 }
