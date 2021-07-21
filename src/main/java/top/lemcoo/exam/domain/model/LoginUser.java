@@ -1,6 +1,7 @@
 package top.lemcoo.exam.domain.model;
 
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -16,6 +17,7 @@ import java.util.Set;
  * @desc
  */
 @Component
+@Data
 public class LoginUser implements UserDetails {
 
     /**

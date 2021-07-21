@@ -1,18 +1,26 @@
 package top.lemcoo.exam.utils;
 
+import com.mysql.cj.util.TimeUtil;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.Data;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
+import top.lemcoo.exam.common.Constants;
 import top.lemcoo.exam.domain.model.LoginUser;
+import top.lemcoo.exam.utils.uuid.IdUtil;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 【生成令牌工具类】
@@ -21,15 +29,39 @@ import java.util.Map;
  * @Date: 2021/6/17 21:00
  */
 @Data
-@ConfigurationProperties(prefix = "jwt")
 @Component
 public class JwtTokenUtil implements Serializable {
 
+    /** 令牌秘钥 */
+    @Value("${jwt.secret}")
     private String secret;
 
+    /** 令牌有效期 */
     private Long expiration;
 
+    /** 自定义令牌标识 */
     private String header;
+
+    protected static final long MILLIS_SECOND = 1000;
+
+    protected static final long MILLIS_MINUTE = 60 * MILLIS_SECOND;
+
+    private static final Long MILLIS_MINUTE_TEN = 20 * 60 * 1000L;
+
+    @Autowired
+    RedisUtil redisUtil;
+
+    /**
+     * 获取用户信息
+     * @param request
+     * @return
+     */
+    public LoginUser getLoginUser(HttpServletRequest request){
+        String token = getToken(request);
+        if (StringUtils.isNotBlank(token)){
+
+        }
+    }
 
     /**
      * 从数据声明生成令牌
@@ -69,6 +101,10 @@ public class JwtTokenUtil implements Serializable {
      * @return 令牌
      */
     public String generateToken(LoginUser loginUser){
+        // 生成uuid
+        String uuid = IdUtil.fastUUID();
+        loginUser.setToken(uuid);
+
         Map<String, Object> claims = new HashMap<>(2);
         claims.put("sub",loginUser.getUsername());
         claims.put("created",new Date());
@@ -113,16 +149,14 @@ public class JwtTokenUtil implements Serializable {
      * @param token 原令牌
      * @return 新令牌
      */
-    public String refreshToken(String token) {
+    public void refreshToken(LoginUser loginUser) {
         String refreshedToken;
-        try {
-            Claims claims = getClaimsFromToken(token);
-            claims.put("created", new Date());
-            refreshedToken = generateToken(claims);
-        } catch (Exception e) {
-            refreshedToken = null;
-        }
-        return refreshedToken;
+        loginUser.setLoginTime(System.currentTimeMillis());
+        loginUser.setExpireTime(loginUser.getLoginTime() + expiration + MILLIS_MINUTE);
+        // 根据uuid将loginUser缓存
+        String userKey = getTokenKey(loginUser.getToken());
+
+        redisUtil.set(userKey,loginUser,expiration, TimeUnit.MINUTES);
     }
 
     /**
@@ -136,5 +170,23 @@ public class JwtTokenUtil implements Serializable {
         LoginUser user = (LoginUser) userDetails;
         String username = getUsernameFromToken(token);
         return (username.equals(user.getUsername()) && !isTokenExpired(token));
+    }
+
+    /**
+     * 从请求中获取token
+     * @param request
+     * @return
+     */
+    private String getToken(HttpServletRequest request){
+        String token = request.getHeader(header);
+
+        if (StringUtils.isNotBlank(token) && token.startsWith(Constants.TOKEN_PREFIX)){
+            token = token.replace(Constants.TOKEN_PREFIX, "");
+        }
+        return token;
+    }
+
+    private String getTokenKey(String uuid){
+        return Constants.LOGIN_USER_KEY + uuid;
     }
 }
