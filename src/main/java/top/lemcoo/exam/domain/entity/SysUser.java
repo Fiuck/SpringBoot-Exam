@@ -20,8 +20,9 @@ import java.util.Set;
 @TableName("sys_user")
 public class SysUser {
 
-    private Long id;
+    private Long userId;
 
+    @TableField("user_name")
     private String username;
 
     private String password;
@@ -58,5 +59,22 @@ public class SysUser {
      */
     @TableField("status")
     private Integer status;
+
+    /**
+     * 逻辑删除，0-已删除，1-正常
+     */
+    private Integer delFlag;
+
+    /**
+     * 是否为admin
+     * @return
+     */
+    public boolean isAdmin(){
+        return isAdmin(this.userId);
+    }
+
+    public static boolean isAdmin(Long userId){
+        return userId != null && 1L == userId;
+    }
 
 }

@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import top.lemcoo.exam.common.R;
 import top.lemcoo.exam.domain.model.LoginBody;
-import top.lemcoo.exam.service.SysLoginService;
+import top.lemcoo.exam.service.ISysLoginService;
 
 /**
  * @author zhaowx
@@ -19,7 +19,7 @@ import top.lemcoo.exam.service.SysLoginService;
 public class SysLoginController {
 
     @Autowired
-    private SysLoginService loginService;
+    private ISysLoginService loginService;
 
     @PostMapping("/login")
     public R<String> login(@RequestBody LoginBody loginBody){

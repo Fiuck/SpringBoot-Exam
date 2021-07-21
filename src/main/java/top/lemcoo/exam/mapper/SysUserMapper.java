@@ -1,6 +1,7 @@
 package top.lemcoo.exam.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 import top.lemcoo.exam.domain.entity.SysUser;
 
@@ -9,7 +10,7 @@ import top.lemcoo.exam.domain.entity.SysUser;
  * @date 2021/6/24 0024 10:25
  * @desc
  */
-@Repository
+@Mapper
 public interface SysUserMapper extends BaseMapper<SysUser> {
 
     SysUser selectUser(String username);

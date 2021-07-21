@@ -3,13 +3,15 @@ package top.lemcoo.exam.service.impl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
+import top.lemcoo.exam.common.exception.CustomException;
+import top.lemcoo.exam.common.exception.UserPasswordNotMatchException;
 import top.lemcoo.exam.domain.model.LoginUser;
-import top.lemcoo.exam.security.jwt.JwtTokenUtil;
-import top.lemcoo.exam.service.SysLoginService;
+import top.lemcoo.exam.utils.JwtTokenUtil;
+import top.lemcoo.exam.service.ISysLoginService;
 
 import javax.annotation.Resource;
 
@@ -20,7 +22,7 @@ import javax.annotation.Resource;
  */
 @Service
 @Slf4j
-public class SysLoginServiceImpl implements SysLoginService {
+public class SysLoginServiceImpl implements ISysLoginService {
 
     @Resource
     private AuthenticationManager authenticationManager;
@@ -36,9 +38,14 @@ public class SysLoginServiceImpl implements SysLoginService {
         try {
             authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
         }catch (Exception e){
-            log.error(e.getMessage());
+            if (e instanceof BadCredentialsException) {
+                throw new UserPasswordNotMatchException();
+            } else {
+                throw new CustomException(e.getMessage());
+            }
         }
-        UserDetails user =(UserDetails) authentication.getPrincipal();
+        LoginUser user =(LoginUser) authentication.getPrincipal();
+        // TODO 记录登录信息
         // 生成token
         return jwtTokenUtil.generateToken(user);
     }

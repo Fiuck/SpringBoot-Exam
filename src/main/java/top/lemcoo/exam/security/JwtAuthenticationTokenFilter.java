@@ -8,7 +8,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
-import top.lemcoo.exam.security.jwt.JwtTokenUtil;
+import top.lemcoo.exam.utils.JwtTokenUtil;
 import top.lemcoo.exam.service.MyUserDetailsService;
 
 import javax.servlet.FilterChain;

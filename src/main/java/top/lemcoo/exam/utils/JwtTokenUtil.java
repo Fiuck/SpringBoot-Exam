@@ -1,4 +1,4 @@
-package top.lemcoo.exam.security.jwt;
+package top.lemcoo.exam.utils;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -7,6 +7,7 @@ import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
+import top.lemcoo.exam.domain.model.LoginUser;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -64,12 +65,12 @@ public class JwtTokenUtil implements Serializable {
 
     /**
      * 生成令牌
-     * @param userDetails 用户
+     * @param loginUser 用户
      * @return 令牌
      */
-    public String generateToken(UserDetails userDetails){
+    public String generateToken(LoginUser loginUser){
         Map<String, Object> claims = new HashMap<>(2);
-        claims.put("sub",userDetails.getUsername());
+        claims.put("sub",loginUser.getUsername());
         claims.put("created",new Date());
         return generateToken(claims);
     }
@@ -132,7 +133,7 @@ public class JwtTokenUtil implements Serializable {
      * @return 是否有效
      */
     public Boolean validateToken(String token, UserDetails userDetails) {
-        JwtUser user = (JwtUser) userDetails;
+        LoginUser user = (LoginUser) userDetails;
         String username = getUsernameFromToken(token);
         return (username.equals(user.getUsername()) && !isTokenExpired(token));
     }

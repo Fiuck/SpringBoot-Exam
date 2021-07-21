@@ -1,7 +1,5 @@
 package top.lemcoo.exam.controller;
 
-import org.springframework.security.core.context.SecurityContextHolder;
-import top.lemcoo.exam.security.jwt.JwtUser;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -19,7 +17,7 @@ public class BaseController {
     HttpServletResponse response;
 
 
-    public static JwtUser getUser(){
-        return (JwtUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-    }
+//    public static JwtUser getUser(){
+//        return (JwtUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+//    }
 }

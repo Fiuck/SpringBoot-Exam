@@ -5,7 +5,7 @@ package top.lemcoo.exam.service;
  * @Description
  * @date 2021/7/20
  */
-public interface SysLoginService {
+public interface ISysLoginService {
 
 
     String login(String username, String password);

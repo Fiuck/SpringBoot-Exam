@@ -4,8 +4,8 @@
 
     <resultMap id="resultMap" type="top.lemcoo.exam.domain.entity.SysUser">
         <!--team中的基本属性-->
-        <id column="id" property="id"/>
-        <result column="username" property="username"/>
+        <id column="user_id" property="userId"/>
+        <result column="user_name" property="username"/>
         <result column="password" property="password"/>
         <result column="avatar" property="avatar"/>
         <result column="email" property="email" jdbcType="VARCHAR"/>
@@ -17,7 +17,7 @@
 
         <!--关联属性的映射关系-->
         <collection property="roles" ofType="top.lemcoo.exam.domain.entity.SysRole">
-            <id column="role_id" property="id"/>
+            <id column="role_id" property="roleId"/>
             <result column="role_name" property="roleName"/>
             <result column="code" property="code"/>
             <result column="remark" property="remark"/>
@@ -30,32 +30,32 @@
 
     <select id="selectUser" resultMap="resultMap">
         SELECT
-        su.id,
-        su.username,
-        su.password,
-        su.avatar,
-        su.email,
-        su.city,
-        su.create_time,
-        su.update_time,
-        su.last_login_time,
-        su.status,
-        sr.id AS role_id,
-        sr.role_name,
-        sr.code AS code,
-        sr.remark,
-        sr.create_time AS role_create_time,
-        sr.update_time AS role_update_time,
-        sr.status AS role_status
-        FROM sys_user su
-        LEFT JOIN
-        sys_user_role sur
-        ON su.id = sur.user_id
-        LEFT JOIN
-        sys_role sr
-        ON sur.role_id = sr.id
-        <where>
-            su.username = #{username}
-        </where>
+            su.user_id,
+            su.user_name,
+            su.`password`,
+            su.avatar,
+            su.email,
+            su.city,
+            su.create_time,
+            su.update_time,
+            su.last_login_time,
+            su.`status`,
+            sr.role_id,
+            sr.role_name,
+            sr.`code`,
+            sr.remark,
+            sr.create_time AS role_create_time,
+            sr.update_time AS role_update_time,
+            sr.`status` AS role_status
+        FROM
+            sys_user su
+                LEFT JOIN sys_user_role sur ON su.user_id = sur.user_id
+                LEFT JOIN sys_role sr ON sur.role_id = sr.role_id
+                AND sr.STATUS = 1
+                AND sr.del_flag = 1
+        WHERE
+            su.STATUS = 1
+          AND su.del_flag = 1
+          AND su.user_name = #{username}
     </select>
 </mapper>

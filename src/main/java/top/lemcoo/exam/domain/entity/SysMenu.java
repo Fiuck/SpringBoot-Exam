@@ -16,11 +16,11 @@ import java.time.LocalDateTime;
 @TableName("sys_menu")
 public class SysMenu {
 
-    private Long id;
+    private Long menuId;
 
     private Long parentId;
 
-    private String name;
+    private String menuName;
 
     private String path;
 
@@ -28,7 +28,7 @@ public class SysMenu {
 
     private String component;
 
-    private Integer type;
+    private Integer menuType;
 
     private String icon;
 
@@ -39,4 +39,9 @@ public class SysMenu {
     private LocalDateTime updateTime;
 
     private Integer status;
+
+    /**
+     * 逻辑删除，0-已删除，1-正常
+     */
+    private Integer delFlag;
 }

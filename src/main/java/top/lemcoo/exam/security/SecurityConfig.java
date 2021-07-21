@@ -116,6 +116,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .logout()
                 .logoutUrl("/logout")
                 .logoutSuccessHandler(myAuthenticationLogoutSuccessHandler)
+                // 跨域处理！重要！
                 .and().headers().frameOptions().disable();
 
         // 处理异常情况：认证失败和权限不足

@@ -18,7 +18,7 @@ import java.util.Date;
 @TableName("sys_role")
 public class SysRole {
 
-    private Long id;
+    private Long roleId;
 
     private String roleName;
 

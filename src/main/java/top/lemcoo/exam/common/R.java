@@ -2,6 +2,7 @@ package top.lemcoo.exam.common;
 
 
 import java.io.Serializable;
+import java.util.HashMap;
 
 /**
  * 【响应消息主体】
@@ -12,7 +13,7 @@ import java.io.Serializable;
 public class R<T> implements Serializable {
     private static final long serialVersionUID = 1L;
 
-    private long code;
+    private Integer code;
 
     private String msg;
 
@@ -41,17 +42,21 @@ public class R<T> implements Serializable {
         return restResult(null,resultCode);
     }
 
+    public static <T> R<T> error(String msg){
+        return error(null, ResultCode.FAILED.getCode(), msg);
+    }
+
     public static <T> R<T> error()
     {
         return restResult(null, ResultCode.FAILED);
     }
 
-    public static <T> R<T> error(T data,long code, String msg)
+    public static <T> R<T> error(T data,Integer code, String msg)
     {
         return restResult(data, code, msg);
     }
 
-    private static <T> R<T> restResult(T data, long code, String msg)
+    private static <T> R<T> restResult(T data, Integer code, String msg)
     {
         R<T> apiResult = new R<>();
         apiResult.setCode(code);
@@ -67,12 +72,12 @@ public class R<T> implements Serializable {
         return apiResult;
     }
 
-    public long getCode()
+    public Integer getCode()
     {
         return code;
     }
 
-    public void setCode(long code)
+    public void setCode(Integer code)
     {
         this.code = code;
     }
