@@ -42,6 +42,9 @@ mybatis-plus:
 jwt:
   route:
     authPath: /auth/**
+  # 令牌标识
   header: Authorization
+  # 令牌秘钥
   secret: eyJleHAiOjE1NDMyMDUyODUsInN1YiI6ImFkbWluIiwiY3JlYXRlZCI6MTU0MDYxMzI4N
-  expiration: 18000000
+  # 有效期 默认30分钟
+  expiration: 30

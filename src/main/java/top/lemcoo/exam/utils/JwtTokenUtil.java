@@ -1,6 +1,5 @@
 package top.lemcoo.exam.utils;
 
-import com.mysql.cj.util.TimeUtil;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -8,7 +7,6 @@ import lombok.Data;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import top.lemcoo.exam.common.Constants;
@@ -36,7 +34,7 @@ public class JwtTokenUtil implements Serializable {
     @Value("${jwt.secret}")
     private String secret;
 
-    /** 令牌有效期 */
+    /** 令牌有效期（默认30分钟） */
     private Long expiration;
 
     /** 自定义令牌标识 */
@@ -53,28 +51,102 @@ public class JwtTokenUtil implements Serializable {
 
     /**
      * 获取用户信息
+     *
      * @param request
      * @return
      */
     public LoginUser getLoginUser(HttpServletRequest request){
         String token = getToken(request);
         if (StringUtils.isNotBlank(token)){
+            Claims claims = getClaimsFromToken(token);
+            // 解析对应的权限及用户信息
+            String uuid = claims.get(Constants.LOGIN_USER_KEY, String.class);
+            String userKey = getTokenKey(uuid);
+            return (LoginUser) redisUtil.get(userKey);
+        }
+        return null;
+    }
 
+    /**
+     * 设置用户身份信息
+     *
+     * @param loginUser
+     */
+    public void setLoginUser(LoginUser loginUser){
+        if (loginUser != null && StringUtils.isNotBlank(loginUser.getToken())) {
+            refreshToken(loginUser);
         }
     }
 
     /**
+     * 删除用户身份信息
+     *
+     * @param token
+     */
+    public void delLoginUser(String token){
+        if (StringUtils.isNotBlank(token)){
+            redisUtil.del(token);
+        }
+    }
+
+    /**
+     * 生成令牌
+     *
+     * @param loginUser 用户
+     * @return 令牌
+     */
+    public String generateToken(LoginUser loginUser){
+        // 生成uuid
+        String uuid = IdUtil.fastUUID();
+        loginUser.setToken(uuid);
+        refreshToken(loginUser);
+
+        Map<String, Object> claims = new HashMap<>(2);
+        claims.put(Constants.LOGIN_USER_KEY,loginUser);
+        return generateToken(claims);
+    }
+
+    /**
      * 从数据声明生成令牌
+     *
      * @param claims 数据声明
      * @return 令牌
      */
     private String generateToken(Map<String,Object> claims){
-        Date expirationTime = new Date(System.currentTimeMillis() + expiration);
+//        Date expirationTime = new Date(System.currentTimeMillis() + expiration);
         return Jwts.builder()
                 .setClaims(claims)
-                .setExpiration(expirationTime)
                 .signWith(SignatureAlgorithm.HS512, secret)
                 .compact();
+    }
+
+    /**
+     * 验证令牌有效期，相差不足20分钟，自动刷新缓存
+     *
+     * @param loginUser
+     */
+    public void verifyToken(LoginUser loginUser){
+        long expireTime = loginUser.getExpireTime();
+        long currentTime = System.currentTimeMillis();
+        if ((expireTime - currentTime) <= MILLIS_MINUTE_TEN) {
+            refreshToken(loginUser);
+        }
+    }
+
+    /**
+     * 刷新令牌有效期
+     *
+     * @param loginUser 原令牌
+     * @return 新令牌
+     */
+    public void refreshToken(LoginUser loginUser) {
+        String refreshedToken;
+        loginUser.setLoginTime(System.currentTimeMillis());
+        loginUser.setExpireTime(loginUser.getLoginTime() + expiration + MILLIS_MINUTE);
+        // 根据uuid将loginUser缓存
+        String userKey = getTokenKey(loginUser.getToken());
+
+        redisUtil.set(userKey,loginUser,expiration, TimeUnit.MINUTES);
     }
 
     /**
@@ -93,22 +165,6 @@ public class JwtTokenUtil implements Serializable {
             claims = null;
         }
         return claims;
-    }
-
-    /**
-     * 生成令牌
-     * @param loginUser 用户
-     * @return 令牌
-     */
-    public String generateToken(LoginUser loginUser){
-        // 生成uuid
-        String uuid = IdUtil.fastUUID();
-        loginUser.setToken(uuid);
-
-        Map<String, Object> claims = new HashMap<>(2);
-        claims.put("sub",loginUser.getUsername());
-        claims.put("created",new Date());
-        return generateToken(claims);
     }
 
     /**
@@ -143,21 +199,6 @@ public class JwtTokenUtil implements Serializable {
         }
     }
 
-    /**
-     * 刷新令牌
-     *
-     * @param token 原令牌
-     * @return 新令牌
-     */
-    public void refreshToken(LoginUser loginUser) {
-        String refreshedToken;
-        loginUser.setLoginTime(System.currentTimeMillis());
-        loginUser.setExpireTime(loginUser.getLoginTime() + expiration + MILLIS_MINUTE);
-        // 根据uuid将loginUser缓存
-        String userKey = getTokenKey(loginUser.getToken());
-
-        redisUtil.set(userKey,loginUser,expiration, TimeUnit.MINUTES);
-    }
 
     /**
      * 验证令牌
