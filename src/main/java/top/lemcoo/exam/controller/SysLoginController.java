@@ -1,10 +1,7 @@
 package top.lemcoo.exam.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import top.lemcoo.exam.common.R;
 import top.lemcoo.exam.domain.model.LoginBody;
 import top.lemcoo.exam.service.ISysLoginService;
@@ -23,9 +20,25 @@ public class SysLoginController {
     @Autowired
     private ISysLoginService loginService;
 
+    /**
+     * 登录接口
+     *
+     * @param loginBody
+     * @return
+     */
     @PostMapping("/login")
     public R<String> login(@RequestBody LoginBody loginBody){
         String token = loginService.login(loginBody.getUsername(), loginBody.getPassword());
         return R.ok(token);
+    }
+
+    /**
+     * 获取用户信息
+     *
+     * @return
+     */
+    @GetMapping("/info")
+    public R getInfo(){
+        return loginService.getInfo();
     }
 }

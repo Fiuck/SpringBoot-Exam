@@ -1,5 +1,7 @@
 package top.lemcoo.exam.service;
 
+import top.lemcoo.exam.common.R;
+
 /**
  * @author zhaowx
  * @Description
@@ -7,6 +9,19 @@ package top.lemcoo.exam.service;
  */
 public interface ISysLoginService {
 
-
+    /**
+     * 用户登录
+     *
+     * @param username
+     * @param password
+     * @return
+     */
     String login(String username, String password);
+
+    /**
+     * 获取登录的用户信息
+     *
+     * @return
+     */
+    R getInfo();
 }

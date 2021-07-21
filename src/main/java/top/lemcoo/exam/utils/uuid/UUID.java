@@ -1,5 +1,7 @@
 package top.lemcoo.exam.utils.uuid;
 
+import top.lemcoo.exam.common.exception.UtilException;
+
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;

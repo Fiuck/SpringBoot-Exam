@@ -7,13 +7,22 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
+import top.lemcoo.exam.common.R;
+import top.lemcoo.exam.common.ResultCode;
+import top.lemcoo.exam.common.exception.BaseException;
 import top.lemcoo.exam.common.exception.CustomException;
 import top.lemcoo.exam.common.exception.UserPasswordNotMatchException;
+import top.lemcoo.exam.domain.entity.SysUser;
 import top.lemcoo.exam.domain.model.LoginUser;
+import top.lemcoo.exam.service.SysPermissionService;
 import top.lemcoo.exam.utils.JwtTokenUtil;
 import top.lemcoo.exam.service.ISysLoginService;
+import top.lemcoo.exam.utils.ServletUtil;
 
 import javax.annotation.Resource;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * @author zhaowx
@@ -29,6 +38,9 @@ public class SysLoginServiceImpl implements ISysLoginService {
 
     @Autowired
     private JwtTokenUtil jwtTokenUtil;
+
+    @Autowired
+    private SysPermissionService permissionService;
 
     @Override
     public String login(String username, String password) {
@@ -48,5 +60,28 @@ public class SysLoginServiceImpl implements ISysLoginService {
         // TODO 记录登录信息
         // 生成token
         return jwtTokenUtil.generateToken(user);
+    }
+
+    /**
+     * 获取登录用户信息
+     *
+     * @return
+     */
+    @Override
+    public R getInfo() {
+        LoginUser loginUser = jwtTokenUtil.getLoginUser(ServletUtil.getRequest());
+        if (loginUser == null) {
+            throw new BaseException(ResultCode.UNAUTHORIZED.getCode(), ResultCode.UNAUTHORIZED.getMessage());
+        }
+        SysUser user = loginUser.getUser();
+        // 角色集合
+        Set<String> roles = permissionService.getRolePermission(user);
+        // 权限集合
+        Set<String> perms = permissionService.getMenuPermission(user);
+        Map<String,Object> map = new HashMap<>();
+        map.put("user", user);
+        map.put("roles", roles);
+        map.put("perms", perms);
+        return R.ok(map);
     }
 }

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="top.lemcoo.exam.mapper.SysRoleMapper">
+
+    <resultMap id="BaseResultMap" type="top.lemcoo.exam.domain.entity.SysRole">
+        <id property="roleId" column="role_id" jdbcType="BIGINT"/>
+        <result property="roleName" column="role_name" jdbcType="VARCHAR"/>
+        <result property="roleCode" column="role_code" jdbcType="VARCHAR"/>
+        <result property="remark" column="remark" jdbcType="VARCHAR"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+        <result property="status" column="status" jdbcType="INTEGER"/>
+        <result property="delFlag" column="del_flag" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        SELECT DISTINCT r.role_id,r.role_name,r.`role_code`,
+                        r.remark,r.create_time,r.update_time,
+                        r.status,r.del_flag
+        FROM sys_role r
+        LEFT JOIN sys_user_role ur ON ur.role_id = r.role_id
+        LEFT JOIN sys_user u ON ur.user_id = u.user_id AND u.del_flag = 1
+    </sql>
+
+    <select id="selectRolePermissionByUserId" resultMap="BaseResultMap">
+        <include refid="Base_Column_List"/>
+        WHERE
+            r.del_flag = 1 AND ur.user_id = #{userId}
+    </select>
+</mapper>

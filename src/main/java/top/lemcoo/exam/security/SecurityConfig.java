@@ -48,16 +48,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     MyAuthenticationLogoutSuccessHandler myAuthenticationLogoutSuccessHandler;
 
-    /**
-     * 跨域过滤器
-     */
-//    @Autowired
-//    private CorsFilter corsFilter;
-
     @Value("${jwt.route.authPath}")
     private String authPath;
-    @Value("${jwt.header}")
-    private String jwtHeader;
 
     /**
      * 解决无法注入AuthenticationManager的问题

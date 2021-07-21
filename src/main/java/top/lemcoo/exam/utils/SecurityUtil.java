@@ -13,7 +13,7 @@ import top.lemcoo.exam.domain.model.LoginUser;
  * @author zhaowx
  * @date 2021/7/21 0021 8:32
  */
-public class SecurityUtils {
+public class SecurityUtil {
 
     /**
      * 获取用户账户

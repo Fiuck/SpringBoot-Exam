@@ -1,10 +1,12 @@
 package top.lemcoo.exam.domain.entity;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -16,13 +18,14 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @TableName("sys_role")
-public class SysRole {
+public class SysRole implements Serializable {
+    private static final long serialVersionUID = 1L;
 
     private Long roleId;
 
     private String roleName;
 
-    private String code;
+    private String roleCode;
 
     private String remark;
 
@@ -31,4 +34,9 @@ public class SysRole {
     private Date updateTime;
 
     private Integer status;
+
+    /**
+     * 逻辑删除，0-已删除，1-正常
+     */
+    private Integer delFlag;
 }

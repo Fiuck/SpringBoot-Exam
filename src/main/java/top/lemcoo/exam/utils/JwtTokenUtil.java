@@ -35,9 +35,11 @@ public class JwtTokenUtil implements Serializable {
     private String secret;
 
     /** 令牌有效期（默认30分钟） */
+    @Value("${jwt.expiration}")
     private Long expiration;
 
     /** 自定义令牌标识 */
+    @Value("${jwt.header}")
     private String header;
 
     protected static final long MILLIS_SECOND = 1000;
@@ -84,8 +86,9 @@ public class JwtTokenUtil implements Serializable {
      * @param token
      */
     public void delLoginUser(String token){
-        if (StringUtils.isNotBlank(token)){
-            redisUtil.del(token);
+        if (StringUtils.isNotBlank(token)) {
+            String userKey = getTokenKey(token);
+            redisUtil.del(userKey);
         }
     }
 
@@ -102,7 +105,7 @@ public class JwtTokenUtil implements Serializable {
         refreshToken(loginUser);
 
         Map<String, Object> claims = new HashMap<>(2);
-        claims.put(Constants.LOGIN_USER_KEY,loginUser);
+        claims.put(Constants.LOGIN_USER_KEY,uuid);
         return generateToken(claims);
     }
 
@@ -113,7 +116,6 @@ public class JwtTokenUtil implements Serializable {
      * @return 令牌
      */
     private String generateToken(Map<String,Object> claims){
-//        Date expirationTime = new Date(System.currentTimeMillis() + expiration);
         return Jwts.builder()
                 .setClaims(claims)
                 .signWith(SignatureAlgorithm.HS512, secret)

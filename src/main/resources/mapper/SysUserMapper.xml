@@ -14,16 +14,18 @@
         <result column="update_time" property="updateTime"/>
         <result column="last_login_time" property="lastLoginTime"/>
         <result column="status" property="status"/>
+        <result column="del_flag" property="delFlag"/>
 
         <!--关联属性的映射关系-->
         <collection property="roles" ofType="top.lemcoo.exam.domain.entity.SysRole">
             <id column="role_id" property="roleId"/>
             <result column="role_name" property="roleName"/>
-            <result column="code" property="code"/>
+            <result column="role_code" property="roleCode"/>
             <result column="remark" property="remark"/>
             <result column="role_create_time" property="createTime"/>
             <result column="role_update_time" property="updateTime"/>
             <result column="role_status" property="status"/>
+            <result column="role_del_flag" property="delFlag"/>
         </collection>
     </resultMap>
 
@@ -42,11 +44,13 @@
             su.`status`,
             sr.role_id,
             sr.role_name,
-            sr.`code`,
+            sr.`role_code`,
             sr.remark,
             sr.create_time AS role_create_time,
             sr.update_time AS role_update_time,
-            sr.`status` AS role_status
+            sr.`status` AS role_status,
+            su.del_flag,
+            sr.del_flag AS role_del_flag
         FROM
             sys_user su
                 LEFT JOIN sys_user_role sur ON su.user_id = sur.user_id

@@ -25,7 +25,7 @@
         `menu_type`,icon,`order_num`, create_time,update_time,status, del_flag
     </sql>
 
-    <select id="selectMenuPermsByUserId" parameterType="java.lang.Integer" resultType="java.lang.String">
+    <select id="selectMenuPermsByUserId" resultType="java.lang.String">
         SELECT DISTINCT
             m.perms
         FROM

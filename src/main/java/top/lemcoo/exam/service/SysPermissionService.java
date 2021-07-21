@@ -23,6 +23,23 @@ public class SysPermissionService {
     ISysMenuService menuService;
 
     /**
+     * 获取角色数据权限
+     *
+     * @param user
+     * @return
+     */
+    public Set<String> getRolePermission(SysUser user) {
+        Set<String> roles = new HashSet<>();
+        // 管理员拥有所有角色
+        if (user.isAdmin()) {
+            roles.add("admin");
+        } else {
+            roles.addAll(roleService.selectRolePermissionByUserId(user.getUserId()));
+        }
+        return roles;
+    }
+
+    /**
      * 获取菜单数据权限
      * @param user
      * @return
