@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -16,6 +17,7 @@ import java.util.List;
  */
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
 @TableName("sys_menu")
 public class SysMenu implements Serializable {
     private static final long serialVersionUID = 1L;

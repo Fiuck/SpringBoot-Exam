@@ -1,6 +1,8 @@
 package top.lemcoo.exam.common;
 
 /**
+ * 用户状态枚举
+ *
  * @author zhaowx
  * @date 2021/7/21
  */

@@ -1,9 +1,12 @@
 package top.lemcoo.exam.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import top.lemcoo.exam.common.ResultCode;
+import top.lemcoo.exam.common.exception.CustomException;
 import top.lemcoo.exam.domain.entity.SysMenu;
 import top.lemcoo.exam.mapper.SysMenuMapper;
 import top.lemcoo.exam.service.ISysMenuService;
@@ -20,6 +23,7 @@ import java.util.stream.Collectors;
  * @author zhaowx
  * @date 2021/7/21 0021 9:12
  */
+@Slf4j
 @Service
 public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> implements ISysMenuService {
 
@@ -52,8 +56,15 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
      */
     @Override
     public List<SysMenu> selectMenuTreeByUserId(Long userId) {
-        List<SysMenu> menuList = menuMapper.selectMenuTreeByUserId(userId);
-        return getChildren(menuList, 0L);
+        List<SysMenu> children = null;
+        try {
+            List<SysMenu> menuList = menuMapper.selectMenuTreeByUserId(userId);
+            children = getChildren(menuList, 0L);
+        }catch (Exception e) {
+            log.error("根据用户ID获取菜单树信息，异常：{}", e.getMessage());
+            throw new CustomException("系统内部异常！",ResultCode.FAILED.getCode());
+        }
+        return children;
     }
 
     /**
