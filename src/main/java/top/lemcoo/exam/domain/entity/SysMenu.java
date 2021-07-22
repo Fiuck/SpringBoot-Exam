@@ -1,11 +1,13 @@
 package top.lemcoo.exam.domain.entity;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * @author zhaowx
@@ -46,4 +48,10 @@ public class SysMenu implements Serializable {
      * 逻辑删除，0-已删除，1-正常
      */
     private Integer delFlag;
+
+    /**
+     * 子菜单列表
+     */
+    @TableField(exist = false)
+    private List<SysMenu> childrens;
 }

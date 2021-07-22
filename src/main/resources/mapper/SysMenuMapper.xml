@@ -21,8 +21,8 @@
     </resultMap>
 
     <sql id="Base_Column_List">
-        menu_id,parent_id,menu_name, `path`,perms,component,
-        `menu_type`,icon,`order_num`, create_time,update_time,status, del_flag
+        m.menu_id,m.parent_id,m.menu_name, m.`path`,ifnull(m.perms, '') as perms,m.component,
+        m.`menu_type`,m.icon,m.`order_num`, m.create_time,m.update_time,m.status, m.del_flag
     </sql>
 
     <select id="selectMenuPermsByUserId" resultType="java.lang.String">
@@ -38,5 +38,19 @@
           AND r.`status` = 1
           AND m.`status` = 1
           AND ur.user_id = #{userId}
+    </select>
+
+    <select id="selectMenuTreeByUserId" resultMap="BaseResultMap">
+        SELECT DISTINCT
+        <include refid="Base_Column_List"/>
+        FROM sys_menu m
+        LEFT JOIN sys_role_menu rm ON rm.menu_id = m.menu_id
+        LEFT JOIN sys_role r ON rm.role_id = r.role_id AND r.status = 1 AND r.del_flag = 1
+        LEFT JOIN sys_user_role ur ON r.role_id = ur.role_id
+        LEFT JOIN sys_user u ON ur.user_id = u.user_id AND u.status = 1 AND u.del_flag = 1
+        WHERE
+            u.user_id = #{userId} AND m.menu_type in (0, 1) AND m.status = 1 AND m.del_flag = 1
+        ORDER BY
+            m.parent_id, m.order_num
     </select>
 </mapper>

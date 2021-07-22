@@ -41,4 +41,14 @@ public class SysLoginController {
     public R getInfo(){
         return loginService.getInfo();
     }
+
+    /**
+     * 获取用户路由
+     *
+     * @return
+     */
+    @GetMapping("/routers")
+    public R getRouters(){
+        return loginService.getRouters();
+    }
 }

@@ -24,4 +24,11 @@ public interface ISysLoginService {
      * @return
      */
     R getInfo();
+
+    /**
+     * 获取用户路由
+     *
+     * @return
+     */
+    R getRouters();
 }

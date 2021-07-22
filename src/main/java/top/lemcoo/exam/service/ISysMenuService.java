@@ -3,6 +3,7 @@ package top.lemcoo.exam.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import top.lemcoo.exam.domain.entity.SysMenu;
 
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -19,4 +20,12 @@ public interface ISysMenuService extends IService<SysMenu> {
      * @return
      */
     Set<String> selectMenuPermsByUserId(Long userId);
+
+    /**
+     * 根据用户ID获取菜单树信息
+     *
+     * @param userId 用户ID
+     * @return
+     */
+    List<SysMenu> selectMenuTreeByUserId(Long userId);
 }

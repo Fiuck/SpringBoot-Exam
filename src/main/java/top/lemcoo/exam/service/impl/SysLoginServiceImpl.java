@@ -12,8 +12,10 @@ import top.lemcoo.exam.common.ResultCode;
 import top.lemcoo.exam.common.exception.BaseException;
 import top.lemcoo.exam.common.exception.CustomException;
 import top.lemcoo.exam.common.exception.UserPasswordNotMatchException;
+import top.lemcoo.exam.domain.entity.SysMenu;
 import top.lemcoo.exam.domain.entity.SysUser;
 import top.lemcoo.exam.domain.model.LoginUser;
+import top.lemcoo.exam.service.ISysMenuService;
 import top.lemcoo.exam.service.SysPermissionService;
 import top.lemcoo.exam.utils.JwtTokenUtil;
 import top.lemcoo.exam.service.ISysLoginService;
@@ -21,6 +23,7 @@ import top.lemcoo.exam.utils.ServletUtil;
 
 import javax.annotation.Resource;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -41,6 +44,9 @@ public class SysLoginServiceImpl implements ISysLoginService {
 
     @Autowired
     private SysPermissionService permissionService;
+
+    @Autowired
+    private ISysMenuService menuService;
 
     @Override
     public String login(String username, String password) {
@@ -83,5 +89,22 @@ public class SysLoginServiceImpl implements ISysLoginService {
         map.put("roles", roles);
         map.put("perms", perms);
         return R.ok(map);
+    }
+
+    /**
+     * 获取用户路由
+     *
+     * @return
+     */
+    @Override
+    public R getRouters() {
+        LoginUser loginUser = jwtTokenUtil.getLoginUser(ServletUtil.getRequest());
+        if (loginUser == null) {
+            throw new BaseException(ResultCode.UNAUTHORIZED.getCode(), ResultCode.UNAUTHORIZED.getMessage());
+        }
+        // 用户信息
+        SysUser user = loginUser.getUser();
+        List<SysMenu> menuList = menuService.selectMenuTreeByUserId(user.getUserId());
+        return R.ok(menuList);
     }
 }

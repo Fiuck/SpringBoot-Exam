@@ -12,6 +12,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * 菜单权限 业务处理
@@ -41,5 +42,53 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
             }
         }
         return permsSet;
+    }
+
+    /**
+     * 根据用户ID获取菜单树信息
+     *
+     * @param userId 用户ID
+     * @return
+     */
+    @Override
+    public List<SysMenu> selectMenuTreeByUserId(Long userId) {
+        List<SysMenu> menuList = menuMapper.selectMenuTreeByUserId(userId);
+        return getChildren(menuList, 0L);
+    }
+
+    /**
+     * 根据父节点ID获取所有子节点
+     *
+     * @param menuList 菜单列表
+     * @param parentId 传入的父节点ID
+     * @return
+     */
+    private List<SysMenu> getChildren(List<SysMenu> menuList, long parentId) {
+        return menuList.stream().filter(item ->
+                item.getParentId().equals(parentId)
+        ).map(item -> {
+            item.setChildrens(getChildren(item, menuList));
+            return item;
+        }).sorted((item1, item2) -> {
+            return (item1.getOrderNum() == null ? 0 : item1.getOrderNum()) - (item2.getOrderNum() == null ? 0 : item2.getOrderNum());
+        }).collect(Collectors.toList());
+    }
+
+    /**
+     * 获取子分类
+     *
+     * @param root 父菜单
+     * @param all 菜单列表
+     * @return
+     */
+    private List<SysMenu> getChildren(SysMenu root, List<SysMenu> all) {
+        return all.stream().filter(item ->
+                item.getParentId().equals(root.getMenuId())
+        ).map(item -> {
+            item.setChildrens(getChildren(item, all));
+            return item;
+        }).sorted((item1, item2) -> {
+            return (item1.getOrderNum() == null ? 0 : item1.getOrderNum()) - (item2.getOrderNum() == null ? 0 : item2.getOrderNum());
+        }).collect(Collectors.toList());
     }
 }
