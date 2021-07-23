@@ -1,7 +1,7 @@
 /*
  Navicat Premium Data Transfer
 
- Source Server         : 8.140.151.105
+ Source Server         : aly
  Source Server Type    : MySQL
  Source Server Version : 80021
  Source Host           : 8.140.151.105:3306
@@ -11,7 +11,7 @@
  Target Server Version : 80021
  File Encoding         : 65001
 
- Date: 21/07/2021 21:11:30
+ Date: 23/07/2021 08:55:39
 */
 
 SET NAMES utf8mb4;
@@ -22,22 +22,22 @@ SET FOREIGN_KEY_CHECKS = 0;
 -- ----------------------------
 DROP TABLE IF EXISTS `sys_menu`;
 CREATE TABLE `sys_menu`  (
-  `menu_id` bigint NOT NULL AUTO_INCREMENT,
-  `parent_id` bigint NULL DEFAULT NULL COMMENT '父菜单ID，一级菜单为0',
+  `menu_id` bigint(0) NOT NULL AUTO_INCREMENT,
+  `parent_id` bigint(0) NULL DEFAULT NULL COMMENT '父菜单ID，一级菜单为0',
   `menu_name` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '菜单名称',
   `path` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '菜单URL',
   `perms` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '授权(多个用逗号分隔，如：user:list,user:create)',
   `component` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
-  `menu_type` int NOT NULL COMMENT '类型     0：目录   1：菜单   2：按钮',
+  `menu_type` int(0) NOT NULL COMMENT '类型     0：目录   1：菜单   2：按钮',
   `icon` varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '菜单图标',
-  `order_num` int NULL DEFAULT NULL COMMENT '排序',
-  `create_time` datetime NOT NULL,
-  `update_time` datetime NULL DEFAULT NULL,
-  `status` int NOT NULL COMMENT '是否启用，0-禁用，1-启用',
-  `del_flag` int NULL DEFAULT 1 COMMENT '逻辑删除，0-已删除，1-正常',
+  `order_num` int(0) NULL DEFAULT NULL COMMENT '排序',
+  `create_time` datetime(0) NOT NULL,
+  `update_time` datetime(0) NULL DEFAULT NULL,
+  `status` int(0) NOT NULL COMMENT '是否启用，0-禁用，1-启用',
+  `del_flag` int(0) NULL DEFAULT 1 COMMENT '逻辑删除，0-已删除，1-正常',
   PRIMARY KEY (`menu_id`) USING BTREE,
   UNIQUE INDEX `name`(`menu_name`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 20 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 20 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of sys_menu
@@ -66,18 +66,18 @@ INSERT INTO `sys_menu` VALUES (19, 4, '删除菜单', NULL, 'sys:menu:delete', N
 -- ----------------------------
 DROP TABLE IF EXISTS `sys_role`;
 CREATE TABLE `sys_role`  (
-  `role_id` bigint NOT NULL AUTO_INCREMENT,
+  `role_id` bigint(0) NOT NULL AUTO_INCREMENT,
   `role_name` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `role_code` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '角色标识代码',
   `remark` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '备注',
-  `create_time` datetime NULL DEFAULT NULL,
-  `update_time` datetime NULL DEFAULT NULL,
-  `status` int NOT NULL COMMENT '是否禁用，0-禁用，1-启用',
-  `del_flag` int NULL DEFAULT NULL COMMENT '逻辑删除，0-已删除，1-正常',
+  `create_time` datetime(0) NULL DEFAULT NULL,
+  `update_time` datetime(0) NULL DEFAULT NULL,
+  `status` int(0) NOT NULL COMMENT '是否禁用，0-禁用，1-启用',
+  `del_flag` int(0) NULL DEFAULT NULL COMMENT '逻辑删除，0-已删除，1-正常',
   PRIMARY KEY (`role_id`) USING BTREE,
   UNIQUE INDEX `name`(`role_name`) USING BTREE,
   UNIQUE INDEX `code`(`role_code`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 7 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 7 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of sys_role
@@ -90,11 +90,11 @@ INSERT INTO `sys_role` VALUES (6, '超级管理员', 'admin', '系统默认最�
 -- ----------------------------
 DROP TABLE IF EXISTS `sys_role_menu`;
 CREATE TABLE `sys_role_menu`  (
-  `id` bigint NOT NULL AUTO_INCREMENT,
-  `role_id` bigint NOT NULL,
-  `menu_id` bigint NOT NULL,
+  `id` bigint(0) NOT NULL AUTO_INCREMENT,
+  `role_id` bigint(0) NOT NULL,
+  `menu_id` bigint(0) NOT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 102 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 102 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of sys_role_menu
@@ -129,20 +129,20 @@ INSERT INTO `sys_role_menu` VALUES (101, 3, 6);
 -- ----------------------------
 DROP TABLE IF EXISTS `sys_user`;
 CREATE TABLE `sys_user`  (
-  `user_id` bigint NOT NULL AUTO_INCREMENT,
+  `user_id` bigint(0) NOT NULL AUTO_INCREMENT,
   `user_name` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `password` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `avatar` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `email` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `city` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
-  `create_time` datetime NULL DEFAULT NULL,
-  `update_time` datetime NULL DEFAULT NULL,
-  `last_login_time` datetime NULL DEFAULT NULL COMMENT '最后登录时间',
-  `status` int NOT NULL COMMENT '是否禁用，0-禁用，1-启用',
-  `del_flag` int NULL DEFAULT NULL COMMENT '逻辑删除，0-已删除，1-正常',
+  `create_time` datetime(0) NULL DEFAULT NULL,
+  `update_time` datetime(0) NULL DEFAULT NULL,
+  `last_login_time` datetime(0) NULL DEFAULT NULL COMMENT '最后登录时间',
+  `status` int(0) NOT NULL COMMENT '是否禁用，0-禁用，1-启用',
+  `del_flag` int(0) NULL DEFAULT NULL COMMENT '逻辑删除，0-已删除，1-正常',
   PRIMARY KEY (`user_id`) USING BTREE,
   UNIQUE INDEX `UK_USERNAME`(`user_name`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of sys_user
@@ -155,11 +155,11 @@ INSERT INTO `sys_user` VALUES (2, 'test', '$2a$10$srmDPZ8.7bw646.YrsWI4.GqGZv5/J
 -- ----------------------------
 DROP TABLE IF EXISTS `sys_user_role`;
 CREATE TABLE `sys_user_role`  (
-  `id` bigint NOT NULL AUTO_INCREMENT,
-  `user_id` bigint NOT NULL,
-  `role_id` bigint NOT NULL,
+  `id` bigint(0) NOT NULL AUTO_INCREMENT,
+  `user_id` bigint(0) NOT NULL,
+  `role_id` bigint(0) NOT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 14 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 14 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of sys_user_role

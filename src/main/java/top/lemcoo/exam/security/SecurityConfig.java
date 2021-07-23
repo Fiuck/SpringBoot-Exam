@@ -106,7 +106,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 // 注销
                 .and()
                 .logout()
-                .logoutUrl("/logout")
+                .logoutUrl("/auth/logout")
                 .logoutSuccessHandler(myAuthenticationLogoutSuccessHandler)
                 // 跨域处理！重要！
                 .and().headers().frameOptions().disable();

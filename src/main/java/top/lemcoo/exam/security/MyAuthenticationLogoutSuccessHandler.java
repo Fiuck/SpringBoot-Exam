@@ -4,6 +4,7 @@ import cn.hutool.json.JSONUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 import org.springframework.stereotype.Component;
 import top.lemcoo.exam.common.R;
@@ -39,6 +40,8 @@ public class MyAuthenticationLogoutSuccessHandler implements LogoutSuccessHandle
             String username = loginUser.getUsername();
             // 删除用户缓存
             tokenUtil.delLoginUser(loginUser.getToken());
+            // 清空security上下文
+            SecurityContextHolder.clearContext();
             log.info("用户：{},退出登录！", username);
         }
 
