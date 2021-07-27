@@ -22,11 +22,20 @@ import java.util.Set;
 public class SysUser implements Serializable {
     private static final long serialVersionUID = 1L;
 
+    /**
+     * 用户id
+     */
     private Long userId;
 
+    /**
+     * 用户名
+     */
     @TableField("user_name")
     private String username;
 
+    /**
+     * 密码
+     */
     private String password;
 
     /**
@@ -34,13 +43,25 @@ public class SysUser implements Serializable {
      */
     private String avatar;
 
+    /**
+     * 电子邮件
+     */
     private String email;
 
+    /**
+     * 城市
+     */
     private String city;
 
+    /**
+     * 创建时间
+     */
     @TableField("create_time")
     private Date createTime;
 
+    /**
+     * 更新时间
+     */
     @TableField("update_time")
     private Date updateTime;
 
@@ -57,6 +78,7 @@ public class SysUser implements Serializable {
     private Date lastLoginTime;
 
     /**
+     * 状态
      * 是否禁用，0-禁用，1-启用
      */
     @TableField("status")

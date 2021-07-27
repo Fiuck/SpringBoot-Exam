@@ -6,10 +6,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * 【】
  *
- * @Author: zhaowx
- * @Date: 2021/6/27 17:12
+ *
+ * @author zhaowx
+ * @date 2021/07/27
  */
 @RestController
 @RequestMapping("/index")

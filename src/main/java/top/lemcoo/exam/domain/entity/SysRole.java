@@ -21,18 +21,39 @@ import java.util.Date;
 public class SysRole implements Serializable {
     private static final long serialVersionUID = 1L;
 
+    /**
+     * 角色id
+     */
     private Long roleId;
 
+    /**
+     * 角色名
+     */
     private String roleName;
 
+    /**
+     * 角色代码
+     */
     private String roleCode;
 
+    /**
+     * 备注
+     */
     private String remark;
 
+    /**
+     * 创建时间
+     */
     private Date createTime;
 
+    /**
+     * 更新时间
+     */
     private Date updateTime;
 
+    /**
+     * 状态
+     */
     private Integer status;
 
     /**

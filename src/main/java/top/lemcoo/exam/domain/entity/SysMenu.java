@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -22,28 +23,64 @@ import java.util.List;
 public class SysMenu implements Serializable {
     private static final long serialVersionUID = 1L;
 
+    /**
+     * 菜单id
+     */
     private Long menuId;
 
+    /**
+     * 父id
+     */
     private Long parentId;
 
+    /**
+     * 菜单名称
+     */
     private String menuName;
 
+    /**
+     * 路径
+     */
     private String path;
 
+    /**
+     * 权限
+     */
     private String perms;
 
+    /**
+     * 组件
+     */
     private String component;
 
+    /**
+     * 菜单类型
+     */
     private Integer menuType;
 
+    /**
+     * 图标
+     */
     private String icon;
 
+    /**
+     * 排序
+     */
     private Integer orderNum;
 
-    private LocalDateTime createTime;
+    /**
+     * 创建时间
+     */
+    private Date createTime;
 
-    private LocalDateTime updateTime;
+    /**
+     * 更新时间
+     */
+    private Date updateTime;
 
+    /**
+     * 状态
+     */
     private Integer status;
 
     /**

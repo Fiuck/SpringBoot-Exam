@@ -7,11 +7,10 @@ import top.lemcoo.exam.domain.model.LoginBody;
 import top.lemcoo.exam.service.ISysLoginService;
 
 /**
- * 登录controller
+ * 系统登录控制器
  *
  * @author zhaowx
- * @Description
- * @date 2021/7/20
+ * @date 2021/07/27
  */
 @RestController
 @RequestMapping("/auth")
