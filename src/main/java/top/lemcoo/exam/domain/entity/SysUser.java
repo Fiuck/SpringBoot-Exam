@@ -30,7 +30,6 @@ public class SysUser implements Serializable {
     /**
      * 用户名
      */
-    @TableField("user_name")
     private String username;
 
     /**
