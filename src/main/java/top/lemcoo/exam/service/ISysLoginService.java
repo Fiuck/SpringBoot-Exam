@@ -30,5 +30,5 @@ public interface ISysLoginService {
      *
      * @return
      */
-    R getRouters();
+    R getRoutes();
 }

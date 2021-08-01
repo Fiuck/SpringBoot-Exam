@@ -46,8 +46,8 @@ public class SysLoginController {
      *
      * @return
      */
-    @GetMapping("/routers")
-    public R getRouters(){
-        return loginService.getRouters();
+    @GetMapping("/routes")
+    public R getRoutes(){
+        return loginService.getRoutes();
     }
 }

@@ -84,6 +84,21 @@ public class SysMenu implements Serializable {
     private Integer status;
 
     /**
+     * 是否显示，0-不显示，1-显示
+     */
+    private Integer visible;
+
+    /**
+     * 是否缓存（0不缓存 1缓存）
+     */
+    private Integer isCache;
+
+    /**
+     * 是否为外联，0-否，1-是
+     */
+    private Integer isFrame;
+
+    /**
      * 逻辑删除，0-已删除，1-正常
      */
     private Integer delFlag;
@@ -92,5 +107,5 @@ public class SysMenu implements Serializable {
      * 子菜单列表
      */
     @TableField(exist = false)
-    private List<SysMenu> childrens;
+    private List<SysMenu> children;
 }

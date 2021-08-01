@@ -97,7 +97,7 @@ public class SysLoginServiceImpl implements ISysLoginService {
      * @return
      */
     @Override
-    public R getRouters() {
+    public R getRoutes() {
         LoginUser loginUser = jwtTokenUtil.getLoginUser(ServletUtil.getRequest());
         if (loginUser == null) {
             throw new BaseException(ResultCode.UNAUTHORIZED.getCode(), ResultCode.UNAUTHORIZED.getMessage());
@@ -105,6 +105,6 @@ public class SysLoginServiceImpl implements ISysLoginService {
         // 用户信息
         SysUser user = loginUser.getUser();
         List<SysMenu> menuList = menuService.selectMenuTreeByUserId(user.getUserId());
-        return R.ok(menuList);
+        return R.ok(menuService.buildMenus(menuList));
     }
 }

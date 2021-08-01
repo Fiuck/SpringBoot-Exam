@@ -17,12 +17,15 @@
             <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
             <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
             <result property="status" column="status" jdbcType="INTEGER"/>
+            <result property="isCache" column="is_cache" jdbcType="INTEGER"/>
+            <result property="isFrame" column="is_frame" jdbcType="INTEGER"/>
+            <result property="visible" column="visible" jdbcType="INTEGER"/>
             <result property="delFlag" column="del_flag" jdbcType="INTEGER"/>
     </resultMap>
 
     <sql id="Base_Column_List">
         m.menu_id,m.parent_id,m.menu_name, m.`path`,ifnull(m.perms, '') as perms,m.component,
-        m.`menu_type`,m.icon,m.`order_num`, m.create_time,m.update_time,m.status, m.del_flag
+        m.`menu_type`,m.icon,m.`order_num`, m.create_time,m.update_time,m.status, m.del_flag,m.is_frame, m.is_cache,m.visible
     </sql>
 
     <select id="selectMenuPermsByUserId" resultType="java.lang.String">
